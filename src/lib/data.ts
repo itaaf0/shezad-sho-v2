@@ -1,0 +1,232 @@
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  longDescription: string;
+  price: number;
+  image: string;
+  inventory: number;
+  sizes: string[];
+  colorName: string;
+  category: "Panjabi" | "Suit" | "Katan Panjabi" | "Kashmiri Shawl" | "Saree";
+}
+
+const products: Product[] = [
+  {
+    id: "prod_14",
+    name: "Katan Panjabi + Coat Combo",
+    description: "A beautiful new panjabi and a coat.",
+    longDescription: "Elevate your formalwear with this classic two-piece combo.this ensemble offers a sophisticated and complete look for weddings, business meetings, or any formal event",
+    price: 2990.00,
+    image: "prod14",
+    inventory: 15,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "[Deep Red]",
+    category: "Katan Panjabi",
+  },
+  {
+    id: "prod_9",
+    name: "Katan Panjabi + Coat Combo",
+    description: "A beautiful new panjabi and a coat.",
+    longDescription: "Elevate your formalwear with this classic two-piece combo.this ensemble offers a sophisticated and complete look for weddings, business meetings, or any formal event",
+    price: 2990.00,
+    image: "prod9",
+    inventory: 15,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "[Light green]",
+    category: "Katan Panjabi",
+  },
+  {
+    id: "prod_10",
+    name: "Katan Panjabi + Coat Combo",
+    description: "A beautiful new panjabi and a coat.",
+    longDescription: "Elevate your formalwear with this classic two-piece combo.this ensemble offers a sophisticated and complete look for weddings, business meetings, or any formal event",
+    price: 2990.00,
+    image: "prod10",
+    inventory: 15,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "[Light Sweet]",
+    category: "Katan Panjabi",
+  },
+   {
+    id: "prod_11",
+    name: "Katan Panjabi + Coat Combo",
+    description: "A beautiful new panjabi and a coat.",
+    longDescription: "Elevate your formalwear with this classic two-piece combo.this ensemble offers a sophisticated and complete look for weddings, business meetings, or any formal event",
+    price: 2990.00,
+    image: "prod11",
+    inventory: 15,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "[Light ash]",
+    category: "Katan Panjabi",
+  },
+   {
+    id: "prod_12",
+    name: "Katan Panjabi + Coat Combo",
+    description: "A beautiful new panjabi and a coat.",
+    longDescription: "Elevate your formalwear with this classic two-piece combo.this ensemble offers a sophisticated and complete look for weddings, business meetings, or any formal event",
+    price: 2990.00,
+    image: "prod12",
+    inventory: 15,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "[Golden]",
+    category: "Katan Panjabi",
+  },
+  {
+    id: "prod_13",
+    name: "Katan Panjabi + Coat Combo",
+    description: "A beautiful new panjabi and a coat.",
+    longDescription: "Elevate your formalwear with this classic two-piece combo.this ensemble offers a sophisticated and complete look for weddings, business meetings, or any formal event",
+    price: 2990.00,
+    image: "prod13",
+    inventory: 15,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "[black olive]",
+    category: "Katan Panjabi",
+  },
+  {
+    id: "prod_1",
+    name: "Printed China Panjabi",
+    description: "An elegant Panjabi in a timeless cream color, perfect for celebrations.",
+    longDescription: "Crafted from a luxurious cotton blend, this classic Panjabi features subtle yet intricate embroidery on the collar and cuffs. Its timeless design offers both supreme comfort and sophisticated style, making it the perfect attire for festive occasions and formal gatherings.",
+    price: 999.00,
+    image: "prod1",
+    inventory: 30,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "Cream",
+    category: "Panjabi",
+  },
+  {
+    id: "prod_2",
+    name: "Printed China Panjabi",
+    description: "An elegant Panjabi in a timeless cream color, perfect for celebrations.",
+    longDescription: "Crafted from a luxurious cotton blend, this classic Panjabi features subtle yet intricate embroidery on the collar and cuffs. Its timeless design offers both supreme comfort and sophisticated style, making it the perfect attire for festive occasions and formal gatherings.",
+    price: 999.00,
+    image: "prod2",
+    inventory: 30,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "Navy Blue",
+    category: "Panjabi",
+  },
+  {
+    id: "prod_3",
+    name: "Maroon Embroidered Panjabi",
+    description: "A rich maroon Panjabi with exquisite embroidery.",
+    longDescription: "Make a bold statement with this stunning maroon Panjabi. The rich, deep color is beautifully complemented by detailed golden embroidery, offering a regal and elegant look. Made from high-quality materials for a perfect blend of style and comfort.",
+    price: 3200.00,
+    image: "prod3",
+    inventory: 20,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "Maroon",
+    category: "Panjabi",
+  },
+  {
+    id: "prod_4",
+    name: "Forest Green Panjabi",
+    description: "A stylish Panjabi in a deep forest green shade.",
+    longDescription: "This forest green Panjabi offers a modern take on a classic garment. Its minimalist design is enhanced by a unique fabric texture and a comfortable, tailored fit, making it suitable for both casual gatherings and formal wear.",
+    price: 2600.00,
+    image: "prod4",
+    inventory: 28,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colorName: "Forest Green",
+    category: "Panjabi",
+  },
+  {
+    id: "prod_5",
+    name: "Modern Black Suit",
+    description: "A sleek and stylish black suit for the modern man.",
+    longDescription: "This modern black suit is tailored for a sharp, contemporary silhouette. Made from a high-quality wool blend, it includes a two-button jacket with notched lapels and matching flat-front trousers, perfect for business, weddings, or any formal event.",
+    price: 12500.00,
+    image: "prod5",
+    inventory: 15,
+    sizes: ["38R", "40R", "42R", "44L"],
+    colorName: "Black",
+    category: "Suit",
+  },
+  {
+    id: "prod_6",
+    name: "Charcoal Grey Suit",
+    description: "A versatile charcoal grey suit for any occasion.",
+    longDescription: "A timeless addition to any wardrobe, this charcoal grey suit is crafted for a perfect fit and classic look. The single-breasted jacket and flat-front trousers offer a versatile style that's easily dressed up with a tie or down for a more casual look.",
+    price: 11800.00,
+    image: "prod6",
+    inventory: 18,
+    sizes: ["36S", "38R", "40L", "42R"],
+    colorName: "Charcoal Grey",
+    category: "Suit",
+  },
+  {
+    id: "prod_7",
+    name: "Elegant Navy Suit",
+    description: "A sophisticated navy blue suit with a slim fit.",
+    longDescription: "Cut for a slim, modern fit, this navy suit is the epitome of European elegance. It's woven from a lightweight wool fabric, making it comfortable for year-round wear. A versatile choice for weddings, work, and special events where you need to look your best.",
+    price: 13500.00,
+    image: "prod7",
+    inventory: 12,
+    sizes: ["38R", "40R", "42L"],
+    colorName: "Navy",
+    category: "Suit",
+  },
+  {
+    id: "prod_8",
+    name: "Light Grey Summer Suit",
+    description: "A breathable light grey suit, perfect for warm weather.",
+    longDescription: "Stay cool and stylish with this light grey summer suit. Made from a breathable linen and cotton blend, it's designed for maximum comfort in warm weather. The relaxed yet sharp fit makes it ideal for summer weddings and outdoor events.",
+    price: 10500.00,
+    image: "prod8",
+    inventory: 20,
+    sizes: ["38R", "40S", "42R", "44R"],
+    colorName: "Light Grey",
+    category: "Suit",
+  },
+  {
+    id: "prod_15",
+    name: "Embroidered Kashmiri Shawl",
+    description: "A stunning Kashmiri shawl with intricate floral embroidery.",
+    longDescription: "This exquisite shawl features vibrant, hand-stitched floral embroidery, a hallmark of Kashmiri craftsmanship. Made from fine wool, it is both beautiful and functional, providing warmth and a touch of artisanal elegance to your wardrobe.",
+    price: 11000.00,
+    image: "shawl2",
+    inventory: 8,
+    sizes: [],
+    colorName: "Crimson Red",
+    category: "Kashmiri Shawl",
+  },
+  {
+    id: "prod_16",
+    name: "Kani Weave Kashmiri Shawl",
+    description: "A masterpiece of weaving, the Kani shawl is a treasured heirloom.",
+    longDescription: "Kani shawls are woven with small wooden sticks, creating intricate, tapestry-like patterns. This piece features a traditional paisley motif in rich, earthy tones. A true work of art, this shawl represents a centuries-old weaving tradition from Kashmir.",
+    price: 25000.00,
+    image: "shawl3",
+    inventory: 5,
+    sizes: [],
+    colorName: "Multi-color",
+    category: "Kashmiri Shawl",
+  },
+  {
+    id: "prod_17",
+    name: "Classic Silk Saree",
+    description: "An elegant silk saree in a rich jewel tone.",
+    longDescription: "Drape yourself in luxury with this classic silk saree. The rich fabric has a beautiful sheen and the intricate border adds a touch of traditional elegance. Perfect for weddings and festive occasions.",
+    price: 999.00,
+    image: "saree1",
+    inventory: 10,
+    sizes: [],
+    colorName: "black",
+    category: "Saree",
+  },
+];
+
+export async function getProducts(category?: Product["category"] | Array<Product["category"]>): Promise<Product[]> {
+  if (!category) {
+    return products;
+  }
+  const categories = Array.isArray(category) ? category : [category];
+  return products.filter(p => categories.includes(p.category));
+}
+
+export async function getProduct(id: string): Promise<Product | undefined> {
+  return products.find(p => p.id === id);
+}

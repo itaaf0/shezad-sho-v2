@@ -1,0 +1,34 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Rules for 'users' collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isOwner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    // Rules for 'wishlists' collection
+    match /wishlists/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Rules for 'carts' collection
+    match /carts/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Rules for 'orders' collection
+    match /orders/{orderId} {
+      allow read: if request.auth != null && (isOwner(resource.data.userId));
+      allow create: if request.auth != null;
+    }
+  }
+}
