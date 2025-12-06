@@ -217,6 +217,18 @@ const products: Product[] = [
     colorName: "black",
     category: "Saree",
   },
+  {
+    id: "prod_18",
+    name: "Classic Silk Saree",
+    description: "An elegant silk saree in a rich jewel tone.",
+    longDescription: "Drape yourself in luxury with this classic silk saree. The rich fabric has a beautiful sheen and the intricate border adds a touch of traditional elegance. Perfect for weddings and festive occasions.",
+    price: 999.00,
+    image: "saree2",
+    inventory: 10,
+    sizes: [],
+    colorName: "Cream",
+    category: "Saree",
+  },
 ];
 
 export async function getProducts(category?: Product["category"] | Array<Product["category"]>): Promise<Product[]> {

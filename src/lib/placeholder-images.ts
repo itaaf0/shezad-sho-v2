@@ -133,5 +133,11 @@ export const placeholderImages: PlaceholderImage[] = [
       "imageUrl": "https://raw.githubusercontent.com/itaaf0/Itaaf-product-images/main/Black%20sarees.png",
        "imageHint": "floral saree"
     },
+    {
+      "id": "saree2",
+      "description": "A woman in a light and airy floral print saree.",
+      "imageUrl": "https://raw.githubusercontent.com/itaaf0/Itaaf-product-images/main/Cream%20sares.png",
+       "imageHint": "floral saree"
+    },
   
   ];
