@@ -113,6 +113,33 @@ export default function CheckoutPage() {
         total: cartTotal,
       });
 
+      // --- ⭐ ২. MongoDB তে ডেটা সেভ করার জন্য নতুন কোড যোগ করুন ⭐ ---
+      
+      // এখানে আমরা MongoDB API রুটের জন্য প্রয়োজনীয় ডেটা প্রস্তুত করছি
+      const mongoOrderData = {
+          orderId: newOrderId,
+          customerName: values.name,
+          totalAmount: cartTotal,
+          // অন্যান্য গুরুত্বপূর্ণ তথ্য যদি দরকার হয়, এখানে যোগ করতে পারেন
+      };
+
+      const mongoResponse = await fetch('/api/order', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(mongoOrderData),
+      });
+
+      if (!mongoResponse.ok) {
+          const errorResult = await mongoResponse.json();
+          // ডাটাবেজে সেভ ব্যর্থ হলে একটি ত্রুটি দেখান
+          throw new Error(errorResult.message || 'Failed to save order to database.');
+      }
+
+      console.log('✅ Order successfully saved to MongoDB.');
+      // --- ⭐ নতুন কোড ব্লক শেষ ⭐ ---
+
       clearCart();
       setOrderPlaced(true);
       router.push(`/order-confirmation?orderId=${newOrderId}`);
