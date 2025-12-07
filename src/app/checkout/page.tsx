@@ -20,18 +20,33 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { sendTelegramOrderMessage } from "@/ai/flows/send-telegram-message";
 import { type Product } from "@/lib/data";
 
+// src/app/checkout/page.tsx
+// ... (লাইন ২৩ এর আশেপাশে)
 const mockOrders: any[] = [];
 
+// ⭐ [নতুন যোগ] বাংলাদেশি ফোন নম্বরের জন্য রেগুলার এক্সপ্রেশন
+const bangladeshiPhoneRegex = /^01[3-9]\d{8}$/; // শুরু 01 দিয়ে এবং মোট 11 ডিজিট
+
 const checkoutSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  address: z.string().min(5, "Address is required"),
-  city: z.string().min(2, "City is required"),
-  zip: z.string().min(4, "Zip code is required"),
-  email: z.string().email("Invalid email address"),
-  paymentMethod: z.enum(["cod", "online"], {
-    required_error: "You need to select a payment method.",
-  }),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  address: z.string().min(5, "Address is required"),
+  city: z.string().min(2, "City is required"),
+  zip: z.string().min(4, "Zip code is required"),
+    
+  // ⭐ [সংশোধিত] ফোন নম্বর ফিল্ড: 11 ডিজিটের বাংলাদেশি নম্বর নিশ্চিত করা হলো
+  phone: z.string()
+    .regex(bangladeshiPhoneRegex, "Invalid Bangladeshi phone number (must be 11 digits, starting with 01)"),
+    
+  // ⭐ [সংশোধিত] ইমেল ফিল্ড: এটিকে ঐচ্ছিক করা হলো
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+    
+  paymentMethod: z.enum(["cod", "online"], {
+    required_error: "You need to select a payment method.",
+  }),
 });
+
+export default function CheckoutPage() {
+// ...
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -39,17 +54,21 @@ export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart, isCartLoaded } = useCart();
   const [orderPlaced, setOrderPlaced] = useState(false);
   
-  const form = useForm<z.infer<typeof checkoutSchema>>({
-    resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      address: "",
-      city: "",
-      zip: "",
-      paymentMethod: "cod",
-    },
-  });
+  // src/app/checkout/page.tsx
+// ... (লাইন ৪২ এর আশেপাশে)
+  const form = useForm<z.infer<typeof checkoutSchema>>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      address: "",
+      city: "",
+      zip: "",
+      // ⭐ [নতুন যোগ] ফোন নম্বর default value
+      phone: "", 
+      paymentMethod: "cod",
+    },
+  });
   
   useEffect(() => {
     if (isAuthLoaded && user) {
@@ -113,32 +132,81 @@ export default function CheckoutPage() {
         total: cartTotal,
       });
 
-      // --- ⭐ ২. MongoDB তে ডেটা সেভ করার জন্য নতুন কোড যোগ করুন ⭐ ---
+      // src/app/checkout/page.tsx - onSubmit ফাংশনের ভেতরে
+
+// ... (existing sendTelegramOrderMessage call এর পরে)
+
+      // --- ⭐ MongoDB তে সেভ করার জন্য চূড়ান্ত ডেটা স্ট্রাকচার তৈরি (সংশোধিত) ⭐ ---
       
-      // এখানে আমরা MongoDB API রুটের জন্য প্রয়োজনীয় ডেটা প্রস্তুত করছি
+      const subtotal = cartTotal;
+      const deliveryCharge = 80; // আপনি যদি ডেলিভারি চার্জ যোগ করতে চান
+      const discountAmount = 0; 
+      const grandTotal = subtotal + deliveryCharge; 
+      
       const mongoOrderData = {
           orderId: newOrderId,
-          customerName: values.name,
-          totalAmount: cartTotal,
-          // অন্যান্য গুরুত্বপূর্ণ তথ্য যদি দরকার হয়, এখানে যোগ করতে পারেন
+          userId: user?.uid || null,
+          
+          // আর্থিক বিবরণ (Financial Details)
+          subtotal: subtotal,
+          discountAmount: discountAmount,
+          deliveryCharge: deliveryCharge,
+          taxAmount: 0,
+          grandTotal: grandTotal,
+          
+          // অর্ডারের আইটেমসমূহ (orderItems)
+          orderItems: cartItems.map(item => ({
+              productId: item.id,
+              name: item.name,
+              // variantName: Size/ColorName
+              variantName: [item.size, item.colorName].filter(Boolean).join(' / ') || null, 
+              unitPrice: item.price,
+              quantity: item.quantity,
+              totalPrice: item.price * item.quantity,
+              imageUrl: placeholderImages.find(p => p.id === item.image)?.imageUrl || '/default-product.jpg', 
+          })),
+
+          // গ্রাহক ও শিপিং তথ্য (shippingInfo)
+          shippingInfo: {
+              name: values.name,
+              phone: values.phone, // <--- এখন ফোন নম্বর যাচ্ছে
+              email: values.email || null, // ইমেল ঐচ্ছিক
+              address: values.address,
+              city: values.city,
+              zip: values.zip,
+              deliveryMethod: 'Standard Courier', 
+              courierName: '',
+          },
+          
+          // পেমেন্ট তথ্য (paymentDetails)
+          paymentDetails: {
+              paymentMethod: values.paymentMethod,
+              paymentStatus: values.paymentMethod === 'cod' ? 'unpaid' : 'pending',
+          },
+          
+          orderStatus: 'pending',
+          
+          notes: '', 
       };
 
+      // API কল: fetch('/api/order', ...)
       const mongoResponse = await fetch('/api/order', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify(mongoOrderData),
+          body: JSON.stringify(mongoOrderData), // সম্পূর্ণ ডেটা স্ট্রাকচার পাঠানো হচ্ছে
       });
-
+      
       if (!mongoResponse.ok) {
           const errorResult = await mongoResponse.json();
-          // ডাটাবেজে সেভ ব্যর্থ হলে একটি ত্রুটি দেখান
           throw new Error(errorResult.message || 'Failed to save order to database.');
       }
 
       console.log('✅ Order successfully saved to MongoDB.');
       // --- ⭐ নতুন কোড ব্লক শেষ ⭐ ---
+      
+    // ... (rest of the try/catch block remains the same)
 
       clearCart();
       setOrderPlaced(true);
@@ -194,6 +262,26 @@ export default function CheckoutPage() {
                   <FormField control={form.control} name="zip" render={({ field }) => (
                     <FormItem><FormLabel>ZIP Code</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )}/>
+                  // src/app/checkout/page.tsx
+// ... (লাইন ২১৬ এর আশেপাশে)
+                  <FormField control={form.control} name="zip" render={({ field }) => (
+                    <FormItem><FormLabel>ZIP Code</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  )}/>
+                  
+                {/* ⭐ [নতুন যোগ] Phone Number Field */}
+                  <FormField control={form.control} name="phone" render={({ field }) => (
+                    <FormItem className="md:col-span-2">
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl><Input {...field} placeholder="e.g., 017xxxxxxxx" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}/>
+                {/* ⭐ [নতুন যোগ] শেষ */}
+                
+                   <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormItem className="md:col-span-2"><FormLabel>Email (Optional)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  )}/>
+// ...
                    <FormField control={form.control} name="email" render={({ field }) => (
                     <FormItem className="md:col-span-2"><FormLabel>Email</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                   )}/>
